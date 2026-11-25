@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mini Google 1998</title>
+  <style>
+    /* Basic page layout: clean white background like classic Google */
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background-color: #ffffff;
+      color: #202124;
+      margin: 0;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    /* Centered logo and search area */
+    .header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    /* Classic 1998 serif logo with colorful Google letters */
+    .logo {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 48px;
+      font-weight: bold;
+      letter-spacing: -1px;
+      margin: 0 0 6px;
+      text-shadow: 1px 1px 0 #e0e0e0;
+    }
+
+    .blue { color: #4285f4; }
+    .red { color: #ea4335; }
+    .yellow { color: #fbbc05; }
+    .green { color: #34a853; }
+
+    .subtitle {
+      font-size: 13px;
+      color: #5f6368;
+      margin: 0 0 22px;
+    }
+
+    /* Search box and 1998-style button */
+    .search-form {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .search-input {
+      width: 380px;
+      max-width: 100%;
+      padding: 10px 14px;
+      font-size: 16px;
+      border: 1px solid #bdbdbd;
+      border-radius: 4px;
+      outline: none;
+    }
+
+    .search-input:focus {
+      border-color: #4285f4;
+      box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.2);
+    }
+
+    .search-button {
+      padding: 10px 20px;
+      font-size: 15px;
+      font-weight: bold;
+      background-color: #f1f3f4;
+      color: #202124;
+      border: 2px outset #dcdcdc;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .search-button:hover {
+      background-color: #e8eaed;
+    }
+
+    /* Quick sample word buttons */
+    .suggestions {
+      margin-top: 12px;
+      font-size: 13px;
+      color: #5f6368;
+    }
+
+    .suggestions button {
+      background: none;
+      border: none;
+      color: #1a0dab;
+      text-decoration: underline;
+      cursor: pointer;
+      font-size: 13px;
+      padding: 2px 4px;
+    }
+
+    /* Two side-by-side columns for Old way vs PageRank way */
+    .columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .column {
+      background-color: #fafafa;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .column h2 {
+      margin: 0 0 4px;
+      font-size: 18px;
+    }
+
+    .column-desc {
+      margin: 0 0 14px;
+      font-size: 13px;
+      color: #5f6368;
+    }
+
+    /* Individual search result card */
+    .card {
+      background-color: #ffffff;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .url {
+      color: #1a0dab;
+      font-weight: bold;
+      font-size: 15px;
+      word-break: break-word;
+    }
+
+    .score {
+      background-color: #e8f0fe;
+      color: #1967d2;
+      font-size: 12px;
+      font-weight: bold;
+      padding: 3px 8px;
+      border-radius: 12px;
+      white-space: nowrap;
+    }
+
+    .score.old {
+      background-color: #fce8e6;
+      color: #c5221f;
+    }
+
+    .snippet {
+      font-size: 13px;
+      color: #4d5156;
+      margin: 0;
+      line-height: 1.4;
+    }
+
+    .status {
+      text-align: center;
+      color: #5f6368;
+      font-size: 14px;
+      margin-bottom: 18px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @media (max-width: 640px) {
+      .columns {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Logo and Search Bar -->
+    <div class="header">
+      <h1 class="logo" aria-label="Mini Google 1998">
+        <span class="blue">M</span><span class="red">i</span><span class="yellow">n</span><span class="blue">i</span>
+        <span class="blue">G</span><span class="red">o</span><span class="yellow">o</span><span class="blue">g</span><span class="green">l</span><span class="red">e</span>
+        <span class="blue">1</span><span class="red">9</span><span class="yellow">9</span><span class="green">8</span>
+      </h1>
+      <p class="subtitle">AI Lab Search Demo &bull; Random Surfer (100,000 moves)</p>
+
+      <form class="search-form" id="searchForm">
+        <input
+          type="text"
+          id="searchInput"
+          class="search-input"
+          placeholder="Search a word (e.g. pizza)..."
+          autocomplete="off"
+        />
+        <button type="submit" class="search-button">Search</button>
+      </form>
+
+      <div class="suggestions">
+        Try:
+        <button type="button" onclick="quickSearch('pizza')">pizza</button>
+        <button type="button" onclick="quickSearch('pune')">pune</button>
+        <button type="button" onclick="quickSearch('food')">food</button>
+        <button type="button" onclick="quickSearch('chai')">chai</button>
+      </div>
+    </div>
+
+    <!-- Search status message -->
+    <p id="statusMessage" class="status hidden"></p>
+
+    <!-- Two side-by-side result columns -->
+    <div id="resultsArea" class="columns hidden">
+      <div class="column">
+        <h2>Old way</h2>
+        <p class="column-desc">Sorted by how many times the word appears</p>
+        <div id="oldResults"></div>
+      </div>
+
+      <div class="column">
+        <h2>PageRank way</h2>
+        <p class="column-desc">Sorted by PageRank (random surfer %)</p>
+        <div id="pageRankResults"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 1. Our tiny web dataset: each object is one web page
+    const pages = [
+      {
+        page: 1,
+        url: "pune-food-guide.com",
+        text: "Where to eat in Pune - vada pav and biryani and pizza",
+        linksTo: [2]
+      },
+      {
+        page: 2,
+        url: "best-pizza-pune.com",
+        text: "Fresh wood-fired pizza made daily - try our cheese pizza",
+        linksTo: [1, 3]
+      },
+      {
+        page: 3,
+        url: "college-canteen-blog.com",
+        text: "Student reviews of canteen food and chai and Friday pizza",
+        linksTo: [2, 4]
+      },
+      {
+        page: 4,
+        url: "pizza-recipes-home.com",
+        text: "Make pizza at home - pizza dough and pizza sauce",
+        linksTo: [2, 5]
+      },
+      {
+        page: 5,
+        url: "cheap-eats-pune.com",
+        text: "Good food under 100 rupees - misal and dosa and pizza slices",
+        linksTo: [2]
+      },
+      {
+        page: 6,
+        url: "pizza-pizza-pizza.com",
+        text: "pizza pizza pizza pizza pizza pizza pizza pizza pizza pizza",
+        linksTo: [1]
+      }
+    ];
+
+    // 2. Calculate PageRank using a random surfer simulation
+    function calculatePageRank(allPages) {
+      const totalMoves = 100000;
+      const boredomChance = 0.15;
+
+      // Count visits for each page number, starting at 0
+      const visits = {};
+      for (const p of allPages) {
+        visits[p.page] = 0;
+      }
+
+      // Helper to pick one random item from any array
+      function pickRandom(list) {
+        return list[Math.floor(Math.random() * list.length)];
+      }
+
+      // Start on a random page
+      let currentPage = pickRandom(allPages);
+
+      // Make 100,000 moves
+      for (let move = 0; move < totalMoves; move++) {
+        // 15% chance the surfer gets bored and jumps to any random page
+        if (Math.random() < boredomChance || currentPage.linksTo.length === 0) {
+          currentPage = pickRandom(allPages);
+        } else {
+          // Otherwise, follow one of the current page's links at random
+          const nextPageNum = pickRandom(currentPage.linksTo);
+          currentPage = allPages.find((p) => p.page === nextPageNum);
+        }
+
+        // Record the visit on the page we landed on
+        visits[currentPage.page] += 1;
+      }
+
+      // PageRank = visits divided by total moves, stored as a percentage
+      for (const p of allPages) {
+        p.pageRank = (visits[p.page] / totalMoves) * 100;
+      }
+    }
+
+    // 3. Count how many times a word appears in text (ignoring capital letters)
+    function countWordMatches(text, word) {
+      return text.toLowerCase().split(word).length - 1;
+    }
+
+    // 4. Build one HTML result card showing rank, URL, score, and snippet
+    function createResultCard(rank, page, scoreText, isOldWay) {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const topRow = document.createElement("div");
+      topRow.className = "card-top";
+
+      const urlLabel = document.createElement("div");
+      urlLabel.className = "url";
+      urlLabel.textContent = rank + ". " + page.url;
+
+      const scoreBadge = document.createElement("span");
+      scoreBadge.className = isOldWay ? "score old" : "score";
+      scoreBadge.textContent = scoreText;
+
+      const snippet = document.createElement("p");
+      snippet.className = "snippet";
+      snippet.textContent = page.text;
+
+      topRow.appendChild(urlLabel);
+      topRow.appendChild(scoreBadge);
+      card.appendChild(topRow);
+      card.appendChild(snippet);
+      return card;
+    }
+
+    // 5. Run the search and display both columns
+    function runSearch(rawWord) {
+      const word = rawWord.trim().toLowerCase();
+      const status = document.getElementById("statusMessage");
+      const resultsArea = document.getElementById("resultsArea");
+      const oldBox = document.getElementById("oldResults");
+      const prBox = document.getElementById("pageRankResults");
+
+      oldBox.innerHTML = "";
+      prBox.innerHTML = "";
+
+      if (!word) {
+        resultsArea.classList.add("hidden");
+        status.classList.remove("hidden");
+        status.textContent = "Please type a word to search.";
+        return;
+      }
+
+      // Find pages whose text contains the searched word
+      const matches = [];
+      for (const p of pages) {
+        const count = countWordMatches(p.text, word);
+        if (count > 0) {
+          matches.push({ ...p, wordCount: count });
+        }
+      }
+
+      if (matches.length === 0) {
+        resultsArea.classList.add("hidden");
+        status.classList.remove("hidden");
+        status.textContent = 'No pages found containing "' + word + '".';
+        return;
+      }
+
+      status.classList.remove("hidden");
+      status.textContent = 'Found ' + matches.length + ' page(s) for "' + word + '"';
+      resultsArea.classList.remove("hidden");
+
+      // Left column: Old way (sorted highest word count first)
+      const oldSorted = [...matches].sort((a, b) => b.wordCount - a.wordCount);
+      oldSorted.forEach((p, index) => {
+        const label = p.wordCount === 1 ? "Score: 1 match" : "Score: " + p.wordCount + " matches";
+        oldBox.appendChild(createResultCard(index + 1, p, label, true));
+      });
+
+      // Right column: PageRank way (sorted highest PageRank first)
+      const prSorted = [...matches].sort((a, b) => b.pageRank - a.pageRank);
+      prSorted.forEach((p, index) => {
+        const label = "PageRank: " + p.pageRank.toFixed(1) + "%";
+        prBox.appendChild(createResultCard(index + 1, p, label, false));
+      });
+    }
+
+    // Helper for the "Try:" buttons
+    function quickSearch(word) {
+      document.getElementById("searchInput").value = word;
+      runSearch(word);
+    }
+
+    // Run PageRank once when the page loads
+    calculatePageRank(pages);
+
+    // Handle Search button click or pressing Enter
+    document.getElementById("searchForm").addEventListener("submit", function (event) {
+      event.preventDefault();
+      runSearch(document.getElementById("searchInput").value);
+    });
+  </script>
+</body>
+</html>
